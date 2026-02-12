@@ -54,6 +54,36 @@ function isPointInStandingHeart(x, y, z) {
 
 function initParticles(font) {
     if (mesh) { scene.remove(mesh); mesh.dispose(); }
+    // --- Thêm vào trong hàm initParticles(font) ---
+const wishPositions = [];
+const wishGeo = new THREE.TextGeometry('MAI YEU', { // Thay lời chúc ở đây
+    font: font,
+    size: 10,
+    height: 2,
+    curveSegments: 12,
+    bevelEnabled: true,
+    bevelThickness: 1,
+    bevelSize: 0.5
+});
+wishGeo.center();
+
+const wishPosAttr = wishGeo.attributes.position;
+// Logic lấy mẫu điểm từ chữ "MÃI YÊU"
+for (let k = 0; k < particleCount; k++) {
+    const p = new THREE.Vector3().fromBufferAttribute(wishPosAttr, Math.floor(Math.random() * wishPosAttr.count));
+    wishPositions.push(p);
+}
+
+// Cập nhật userData để animate có thể dùng
+mesh.userData = { 
+    heartPositions, 
+    textPositions, 
+    wishPositions, // Thêm cái này
+    currentPos, 
+    velocity, 
+    randomRot, 
+    baseSize: particleSize 
+};
     // Tăng kích thước hạt lên một chút để lấp đầy khoảng trống
     const particleSize = 45.0 / Math.sqrt(particleCount);
 
